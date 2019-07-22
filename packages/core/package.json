@@ -19,5 +19,8 @@
   ],
   "scripts": {
     "tsc": "tsc"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.2"
   }
 }
