@@ -1,2 +1,2 @@
 export * from './Leaf';
-export * from './node';
+export * from './Node';

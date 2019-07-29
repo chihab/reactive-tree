@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "lerna": "lerna",
     "test": "jest"
   },
   "devDependencies": {
