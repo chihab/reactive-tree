@@ -7,7 +7,6 @@
     "core"
   ],
   "author": "Chihab Otmani <chihab@gmail.com>",
-  "homepage": "",
   "license": "ISC",
   "main": "lib/core.js",
   "directories": {

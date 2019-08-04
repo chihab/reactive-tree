@@ -1,29 +1,38 @@
-import { combineLatest, Observable, Subscription } from "rxjs";
-import { map } from "rxjs/operators";
+import { combineLatest, merge, Observable, Subject } from "rxjs";
+import { map, switchMap } from "rxjs/operators";
 import { Leaf } from "./Leaf";
 
 type Child = Node<any> | Leaf<any>;
 
 export class Node<T> {
-  private subscription: Subscription;
-
+  update: Subject<T> = new Subject();
   output$: Observable<T>;
 
   constructor(
     private children: Child[],
     private reducer: (children: any[]) => T
   ) {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    const children$ = this.children.map(child => child.output$);
-    this.output$ = combineLatest(...children$).pipe(
+    this.output$ = merge(
+      this.observe(),
+      this.update.asObservable()
+        .pipe(
+          switchMap(() => {
+            return this.observe();
+          })
+        )
+    )
+  }
+  observe() {
+    return combineLatest(...this.children.map(child => child.output$)).pipe(
       map(this.reducer)
     );
   }
-  insert() {
-    // Unsubscribe from children
-    // new subscription
+  insert(child: Child) {
+    this.children.push(child);
+    this.update.next();
   }
-  remove() {}
+  remove(child: Child) {
+    this.children = this.children.filter(c => c !== child);
+    this.update.next();
+  }
 }
