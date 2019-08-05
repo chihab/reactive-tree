@@ -1,11 +1,5 @@
 import { Reducer, Node, Leaf, Child, reducerSymbol } from '@reactive-tree/core';
 
-/**
- * 
- * @param json 
- * @param reducer 
- * 
- **/
 export const tree = function <T = any>(obj, reducer: Reducer<T>): any {
   const node = Object.keys(obj)
     .reduce((node: Node, key) => {

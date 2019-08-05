@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-export class Leaf<T> {
+export class Leaf<T = any> {
   private _value: T;
   private output: BehaviorSubject<T>;
 

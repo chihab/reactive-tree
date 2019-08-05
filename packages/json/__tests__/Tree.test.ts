@@ -3,7 +3,7 @@ import { tree } from '../src';
 import { take, skip } from 'rxjs/operators';
 
 test('should construct a Tree from json', done => {
-  const reducer = (...children) => {
+  const reducer = (children) => {
     return children.reduce((sum, val) => sum + val, 0)
   }
   const result = tree({
