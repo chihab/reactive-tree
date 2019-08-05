@@ -7,6 +7,7 @@ export class Leaf<T = any> {
   output$: Observable<T>;
 
   constructor(value: T = undefined) {
+    this._value = value;
     this.output = new BehaviorSubject<T>(value);
     this.output$ = this.output.asObservable();
   }

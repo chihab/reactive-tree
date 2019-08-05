@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
-    "test": "jest"
+    "test": "jest",
+    "start": "start"
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
