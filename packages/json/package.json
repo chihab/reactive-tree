@@ -1,0 +1,29 @@
+{
+  "name": "@reactive-tree/json",
+  "version": "0.1.0",
+  "description": "Create a reactive tree from JSON",
+  "author": "Chihab Otmani <chihab@gmail.com>",
+  "homepage": "https://github.com/chihab/reactive-tree#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chihab/reactive-tree.git"
+  },
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/chihab/reactive-tree/issues"
+  },
+  "dependencies": {
+    "@reactive-tree/core": "0.1.0"
+  }
+}

@@ -2,16 +2,20 @@ import { combineLatest, merge, Observable, Subject } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
 import { Leaf } from "./Leaf";
 
-type Child = Node<any> | Leaf<any>;
+export type Child<T = any> = Node<T> | Leaf<T>;
+export type Reducer<T> = (children: Child[]) => T;
+export const reducerSymbol = Symbol('__reducer__');
 
-export class Node<T> {
-  update: Subject<T> = new Subject();
+export class Node<T = any> {
+  private update: Subject<T> = new Subject();
+  private children: Child<T>[] = [];
+  private reducer: Reducer<T>;
+
   output$: Observable<T>;
 
-  constructor(
-    private children: Child[],
-    private reducer: (children: any[]) => T
-  ) {
+  constructor() { }
+
+  output() {
     this.output$ = merge(
       this.observe(),
       this.update.asObservable()
@@ -22,17 +26,27 @@ export class Node<T> {
         )
     )
   }
-  observe() {
-    return combineLatest(...this.children.map(child => child.output$)).pipe(
-      map(this.reducer)
-    );
+  setReducer(reducer) {
+    this.reducer = reducer;
   }
-  insert(child: Child) {
-    this.children.push(child);
-    this.update.next();
+  getReducer() {
+    return this.reducer;
+  }
+  insert(children: Child[]) {
+    this.children = [...this.children, ...children];
+    if (this.output$) {
+      this.update.next();
+    }
   }
   remove(child: Child) {
     this.children = this.children.filter(c => c !== child);
-    this.update.next();
+    if (this.output$) {
+      this.update.next();
+    }
+  }
+  protected observe() {
+    return combineLatest(...this.children.map(child => child.output$)).pipe(
+      map(this.reducer)
+    );
   }
 }
