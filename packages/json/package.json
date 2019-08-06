@@ -25,5 +25,10 @@
   },
   "dependencies": {
     "@reactive-tree/core": "0.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2"
   }
 }
