@@ -1,9 +1,31 @@
-import React, { Fragment } from "react";
-import { ReactiveConsumer } from "./components";
+import { tree } from "@reactive-tree/json";
+import React from "react";
+import { ReactiveConsumer } from "../components";
+import { ReactiveProvider } from "../components";
+
+const reducer = children => {
+  return children.reduce((sum, val) => sum + val, 0);
+};
+
+const store = tree(
+  {
+    Total: {
+      Add: {
+        var1: 1,
+        var2: 2
+      },
+      Prod: {
+        var1: 3,
+        var2: -1
+      }
+    }
+  },
+  reducer
+);
 
 export default function Math() {
   return (
-    <Fragment>
+    <ReactiveProvider store={store}>
       <h1> Total </h1>
       <section>
         <ReactiveConsumer node="Total">
@@ -31,6 +53,6 @@ export default function Math() {
           )}
         </ReactiveConsumer>
       </section>
-    </Fragment>
+    </ReactiveProvider>
   );
 }

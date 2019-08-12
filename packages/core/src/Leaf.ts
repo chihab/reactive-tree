@@ -1,20 +1,27 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import { merge, Observable, Subject } from "rxjs";
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export class Leaf<T = any> {
-  private _value: T;
-  private output: BehaviorSubject<T>;
+  private _value;
+  private input: Subject<T> = new Subject<T>();
+  output$: Observable<any>;
 
-  output$: Observable<T>;
-
-  constructor(value: T = undefined) {
-    this._value = value;
-    this.output = new BehaviorSubject<T>(value);
-    this.output$ = this.output.asObservable();
+  constructor(value, reducer) {
+    this.output$ = merge(
+      reducer(value).pipe(
+        takeUntil(this.input),
+        tap(value => this._value = value)
+      ),
+      this.input.asObservable()
+        .pipe(
+          switchMap(value => reducer(value)),
+          tap(value => this._value = value)
+        )
+    )
   }
 
   set value(value: T) {
-    this._value = value;
-    this.output.next(value);
+    this.input.next(value);
   }
 
   get value(): T {
@@ -22,6 +29,6 @@ export class Leaf<T = any> {
   }
 
   complete(): void {
-    this.output.complete();
+    this.input.complete();
   }
 }
