@@ -3,7 +3,7 @@ import { map, switchMap, takeUntil } from "rxjs/operators";
 import { Leaf } from "./Leaf";
 
 export type Child<T = any> = Node<T> | Leaf<T>;
-export type Reducer<T> = (children: Child<T>[]) => T;
+export type Reducer<T> = (children: Child<T>[]) => Observable<T>;
 export const reducerSymbol = Symbol('__reducer__');
 
 export class Node<T = any> {
@@ -59,7 +59,7 @@ export class Node<T = any> {
 
   protected observe() {
     return combineLatest(...this.children.map(child => child.output$)).pipe(
-      map(this.reducer)
+      switchMap(children => this.reducer(children))
     );
   }
 }

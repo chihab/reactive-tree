@@ -1,9 +1,8 @@
-import React from "react";
-import { ReactiveConsumer } from "../components";
-import { ReactiveProvider } from "../components";
-import { of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
 import { tree } from '@reactive-tree/json';
+import React from "react";
+import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { ReactiveConsumer, ReactiveProvider } from "../components";
 
 const nodeReducer = children => {
   return children.some(value => value);

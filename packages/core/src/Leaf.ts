@@ -1,4 +1,4 @@
-import { merge, Observable, Subject } from "rxjs";
+import { merge, Observable, Subject, of } from "rxjs";
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export class Leaf<T = any> {
@@ -6,7 +6,7 @@ export class Leaf<T = any> {
   private input: Subject<T> = new Subject<T>();
   output$: Observable<any>;
 
-  constructor(value, reducer) {
+  constructor(value, reducer = of) {
     this.output$ = merge(
       reducer(value).pipe(
         takeUntil(this.input),
