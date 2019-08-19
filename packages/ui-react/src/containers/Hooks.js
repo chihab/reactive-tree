@@ -1,10 +1,7 @@
-import { tree } from "@reactive-tree/json";
 import React from "react";
-import { fromEvent, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { tree } from "@reactive-tree/json";
+import { of } from "rxjs";
 import { ReactiveProvider, useConsumer } from "../components";
-
-const click$ = fromEvent(document, 'click');
 
 const store = tree(
   {
@@ -20,24 +17,39 @@ const store = tree(
     }
   },
   children => of(children.reduce((sum, val) => sum + val, 0)),
-  val => click$.pipe(
-    map(() => val++)
-  )
+  val => of(val)
 );
 
+function Node({ path }) {
+  const [{ loading, value }] = useConsumer(path);
+  return loading ? <span> Loading </span> : <h1> {value} </h1>;
+}
+
+function Leaf({ path }) {
+  const [{ loading, value, node }] = useConsumer(path);
+  return loading ? (
+    <span> Loading </span>
+  ) : (
+    <h2 onClick={() => node.value++}> {value} </h2>
+  );
+}
+
 function Total() {
-  const [{ value }] = useConsumer("Total");
   return (
-    <section>
-      <h1> Total: {value} </h1>
-    </section>
+    <>
+      <Node path="Total" />
+      <Node path="Total.Add" />
+      <Node path="Total.Prod" />
+      <Leaf path="Total.Add.var1" />
+      <Leaf path="Total.Add.var2" />
+    </>
   );
 }
 
 export default function Hooks() {
   return (
     <ReactiveProvider store={store}>
-      <Total></Total>
+      <Total />
     </ReactiveProvider>
   );
 }
